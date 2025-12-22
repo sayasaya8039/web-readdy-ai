@@ -387,164 +387,109 @@ function getMainPageHTML(): string {
 
     <!-- 右側：チャットパネル -->
     <div class="w-96 bg-white border-l border-slate-200 flex flex-col">
-      <!-- タブヘッダー -->
-      <div class="border-b border-slate-200">
-        <div class="flex">
-          <button onclick="switchTab('chat')" id="tab-chat" class="flex-1 py-3 text-sm font-medium text-purple-600 border-b-2 border-purple-500 transition-colors">チャット</button>
-          <button onclick="switchTab('code')" id="tab-code" class="flex-1 py-3 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">コード</button>
-        </div>
+      <!-- フィードバックボタン（左上） -->
+      <div class="p-4 flex gap-2">
+        <button onclick="sendFeedback('up')" class="w-8 h-8 rounded hover:bg-slate-100 flex items-center justify-center text-slate-400 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
+          </svg>
+        </button>
+        <button onclick="sendFeedback('down')" class="w-8 h-8 rounded hover:bg-slate-100 flex items-center justify-center text-slate-400 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018c.163 0 .326.02.485.06L17 4m-7 10v5a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"/>
+          </svg>
+        </button>
       </div>
 
-      <!-- チャットコンテンツ -->
-      <div id="chat-content" class="flex-1 flex flex-col">
-        <!-- チャットメッセージエリア -->
-        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4">
-          <!-- ウェルカムメッセージ -->
-          <div class="chat-message">
-            <div class="flex items-start gap-3">
-              <!-- ひし形のアバター -->
-              <div class="w-8 h-8 bg-purple-500 flex items-center justify-center text-white text-sm flex-shrink-0 rotate-45">
-                <span class="rotate-[-45deg]">R</span>
-              </div>
-              <div class="flex-1">
-                <p class="text-sm text-slate-600">こんにちは！Readdy AIです。作りたいWebサイトについて教えてください。</p>
+      <!-- 中央メッセージエリア -->
+      <div class="flex-1 flex items-center justify-center px-8">
+        <p class="text-center text-slate-600 text-base leading-relaxed">
+          変更内容を具体的かつ明確に教えてください。一度に1つのタスク。
+        </p>
+      </div>
+
+      <!-- 設定ボタンとファイル操作エリア -->
+      <div class="px-4 pb-2">
+        <!-- 設定トグル -->
+        <details class="group mb-2">
+          <summary class="cursor-pointer text-xs text-slate-500 hover:text-slate-700 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            設定（AIプロバイダー・APIキー）
+          </summary>
+          <div class="mt-2 space-y-2 p-3 bg-slate-50 rounded-lg">
+            <!-- AIプロバイダー選択 -->
+            <div>
+              <label class="block text-xs font-medium text-slate-600 mb-2">AIプロバイダー</label>
+              <div class="flex gap-2">
+                <label class="flex-1">
+                  <input type="radio" name="ai-provider" value="openai" checked class="peer hidden" />
+                  <div class="px-2 py-1.5 text-center text-xs rounded-lg border border-slate-200 cursor-pointer peer-checked:border-purple-500 peer-checked:bg-purple-50 peer-checked:text-purple-600 transition-colors">
+                    OpenAI
+                  </div>
+                </label>
+                <label class="flex-1">
+                  <input type="radio" name="ai-provider" value="gemini" class="peer hidden" />
+                  <div class="px-2 py-1.5 text-center text-xs rounded-lg border border-slate-200 cursor-pointer peer-checked:border-purple-500 peer-checked:bg-purple-50 peer-checked:text-purple-600 transition-colors">
+                    Gemini
+                  </div>
+                </label>
+                <label class="flex-1">
+                  <input type="radio" name="ai-provider" value="claude" class="peer hidden" />
+                  <div class="px-2 py-1.5 text-center text-xs rounded-lg border border-slate-200 cursor-pointer peer-checked:border-purple-500 peer-checked:bg-purple-50 peer-checked:text-purple-600 transition-colors">
+                    Claude
+                  </div>
+                </label>
               </div>
             </div>
+            <!-- APIキー入力 -->
+            <div>
+              <label class="block text-xs font-medium text-slate-600 mb-2">APIキー</label>
+              <input type="password" id="api-key-input" placeholder="sk-..." class="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500" />
+            </div>
           </div>
-        </div>
+        </details>
 
         <!-- ファイル操作表示エリア -->
-        <div id="file-operations" class="hidden border-t border-slate-200 p-3 bg-slate-50 max-h-40 overflow-y-auto">
-          <button onclick="toggleFileOperations()" class="text-xs text-slate-500 hover:text-slate-700 mb-2 flex items-center gap-1">
-            <span>▼</span> ファイル操作を表示
-          </button>
+        <div id="file-operations" class="hidden p-2 bg-slate-50 rounded-lg max-h-24 overflow-y-auto">
+          <div class="text-xs text-slate-500 mb-1">ファイル操作:</div>
           <div id="file-operations-list" class="space-y-1"></div>
-        </div>
-
-        <!-- 設定エリア（AIプロバイダー・APIキー） -->
-        <div id="settings-area" class="border-t border-slate-200 p-4">
-          <details class="group">
-            <summary class="cursor-pointer text-sm text-slate-500 hover:text-slate-700 flex items-center gap-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-              </svg>
-              設定（AIプロバイダー・APIキー）
-            </summary>
-            <div class="mt-3 space-y-3">
-              <!-- AIプロバイダー選択 -->
-              <div>
-                <label class="block text-xs font-medium text-slate-600 mb-2">AIプロバイダー</label>
-                <div class="flex gap-2">
-                  <label class="flex-1">
-                    <input type="radio" name="ai-provider" value="openai" checked class="peer hidden" />
-                    <div class="px-3 py-2 text-center text-xs rounded-lg border border-slate-200 cursor-pointer peer-checked:border-purple-500 peer-checked:bg-purple-50 peer-checked:text-purple-600 transition-colors">
-                      OpenAI
-                    </div>
-                  </label>
-                  <label class="flex-1">
-                    <input type="radio" name="ai-provider" value="gemini" class="peer hidden" />
-                    <div class="px-3 py-2 text-center text-xs rounded-lg border border-slate-200 cursor-pointer peer-checked:border-purple-500 peer-checked:bg-purple-50 peer-checked:text-purple-600 transition-colors">
-                      Gemini
-                    </div>
-                  </label>
-                  <label class="flex-1">
-                    <input type="radio" name="ai-provider" value="claude" class="peer hidden" />
-                    <div class="px-3 py-2 text-center text-xs rounded-lg border border-slate-200 cursor-pointer peer-checked:border-purple-500 peer-checked:bg-purple-50 peer-checked:text-purple-600 transition-colors">
-                      Claude
-                    </div>
-                  </label>
-                </div>
-              </div>
-              <!-- APIキー入力 -->
-              <div>
-                <label class="block text-xs font-medium text-slate-600 mb-2">APIキー</label>
-                <input type="password" id="api-key-input" placeholder="sk-..." class="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500" />
-              </div>
-            </div>
-          </details>
-        </div>
-
-        <!-- 入力エリア -->
-        <div class="border-t border-slate-200 p-4">
-          <!-- 説明テキスト -->
-          <p class="text-xs text-slate-500 mb-3">変更内容を具体的かつ明確に教えてください。一度に1つのタスク。</p>
-
-          <!-- フィードバックボタン -->
-          <div class="flex justify-end gap-2 mb-2">
-            <button onclick="sendFeedback('up')" class="w-7 h-7 rounded hover:bg-slate-100 flex items-center justify-center text-slate-400 transition-colors">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
-              </svg>
-            </button>
-            <button onclick="sendFeedback('down')" class="w-7 h-7 rounded hover:bg-slate-100 flex items-center justify-center text-slate-400 transition-colors">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018c.163 0 .326.02.485.06L17 4m-7 10v5a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"/>
-              </svg>
-            </button>
-          </div>
-
-          <!-- テキスト入力エリア -->
-          <div class="relative">
-            <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-purple-500">
-              <!-- 鉛筆アイコン -->
-              <div class="pl-3 py-2 text-slate-400">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                </svg>
-              </div>
-              <!-- 入力フィールド -->
-              <input type="text" id="prompt-input" placeholder="バージョン1" class="flex-1 px-2 py-2 text-sm focus:outline-none" />
-              <!-- 三点リーダー -->
-              <button class="pr-3 py-2 text-slate-400 hover:text-slate-600">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <circle cx="12" cy="5" r="2"/>
-                  <circle cx="12" cy="12" r="2"/>
-                  <circle cx="12" cy="19" r="2"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <!-- ツールバー -->
-          <div class="flex items-center justify-between mt-3">
-            <div class="flex items-center gap-1">
-              <button class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition-colors" title="Selector">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/>
-                </svg>
-              </button>
-              <button class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition-colors" title="Code">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-                </svg>
-              </button>
-              <button class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition-colors" title="Voice">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
-                </svg>
-              </button>
-              <button onclick="document.getElementById('file-upload').click()" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition-colors" title="Image">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-              </button>
-              <input type="file" accept="image/*,.pdf" multiple class="hidden" id="file-upload" />
-            </div>
-            <!-- 送信ボタン -->
-            <button id="send-btn" onclick="handleSend()" class="p-2 text-purple-500 hover:text-purple-600 hover:bg-purple-50 rounded transition-colors disabled:text-slate-300 disabled:hover:bg-transparent" disabled>
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
 
-      <!-- コードタブコンテンツ -->
-      <div id="code-content" class="flex-1 hidden">
-        <div class="h-full p-4">
-          <pre id="full-code-display" class="h-full p-4 bg-slate-800 text-slate-100 text-sm overflow-auto rounded-lg"><code>コードはまだ生成されていません</code></pre>
+      <!-- 入力エリア -->
+      <div class="p-4 border-t border-slate-200">
+        <!-- 入力フィールド -->
+        <input type="text" id="prompt-input" placeholder="セレクター" class="w-full px-4 py-3 text-sm rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500 mb-3" />
+
+        <!-- ツールバー -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-1">
+            <button class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+              </svg>
+            </button>
+            <button class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+              </svg>
+            </button>
+            <button onclick="document.getElementById('file-upload').click()" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+            </button>
+            <input type="file" accept="image/*,.pdf" multiple class="hidden" id="file-upload" />
+          </div>
+          <!-- 送信ボタン -->
+          <button id="send-btn" onclick="handleSend()" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition-colors disabled:text-slate-200 disabled:hover:bg-transparent" disabled>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
