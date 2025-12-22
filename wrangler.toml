@@ -1,0 +1,18 @@
+name = "web-readdy-ai"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+ENVIRONMENT = "development"
+
+# KV namespace for storing generated websites (オプション)
+# [[kv_namespaces]]
+# binding = "KV"
+# id = "your-kv-namespace-id"
+# preview_id = "your-preview-kv-namespace-id"
+
+# R2 for file storage (オプション)
+# [[r2_buckets]]
+# binding = "R2"
+# bucket_name = "web-readdy-ai-uploads"
