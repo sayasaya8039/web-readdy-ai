@@ -48,10 +48,10 @@ app.get('/static/main.js', (c) => {
 // API: Webサイト生成エンドポイント
 app.post('/api/generate', async (c) => {
   try {
-    const { prompt, aiProvider, apiKey, images } = await c.req.json()
+    const { prompt, aiProvider, apiKey, images, existingCode } = await c.req.json()
 
     // AIプロバイダーに応じて適切なサービスを選択
-    const code = await generateWebsite(prompt, aiProvider, apiKey, images)
+    const code = await generateWebsite(prompt, aiProvider, apiKey, images, existingCode)
 
     return c.json({
       success: true,
@@ -72,10 +72,34 @@ async function generateWebsite(
   prompt: string,
   aiProvider: string,
   apiKey: string,
-  images?: Array<{ name: string; type: string; data: string }>
+  images?: Array<{ name: string; type: string; data: string }>,
+  existingCode?: string
 ): Promise<string> {
-  // プロンプトに画像情報を追加
-  let fullPrompt = `ユーザーが作りたいWebサイトについて説明しています。
+  // プロンプトを生成（既存コードがある場合は修正モード）
+  let fullPrompt: string
+
+  if (existingCode) {
+    // 修正モード：既存のコードを基に改善
+    fullPrompt = `あなたは既存のWebサイトを改善するWeb開発者です。
+以下の既存のHTMLコードを基に、ユーザーの要望に従って修正・改善してください。
+
+【既存のコード】
+${existingCode}
+
+【ユーザーの修正要望】
+${prompt}
+
+【重要なルール】
+- 既存のコードを基盤として、要望された部分のみを変更してください
+- 要望されていない部分はそのまま維持してください
+- 完全なHTMLファイルを出力してください
+- Tailwind CSSを引き続き使用してください
+
+【出力形式】
+HTMLのコードのみを出力してください。説明文やコードブロック（\`\`\`）は不要です。`
+  } else {
+    // 新規作成モード
+    fullPrompt = `ユーザーが作りたいWebサイトについて説明しています。
 以下の要件を満たす、完全で実用的なHTMLファイル（1つのファイルにCSSとJavaScriptを含む）を作成してください。
 
 【要件】
@@ -96,6 +120,7 @@ ${images && images.length > 0 ? `
 
 【出力形式】
 HTMLのコードのみを出力してください。説明文やコードブロック（\`\`\`）は不要です。`
+  }
 
   // AIプロバイダーに応じてAPIリクエストを作成
   let htmlCode = ''
@@ -651,7 +676,8 @@ async function handleSend() {
         prompt: prompt,
         aiProvider: state.aiProvider,
         apiKey: state.apiKey,
-        images: imageData
+        images: imageData,
+        existingCode: state.generatedCode
       })
     })
 
