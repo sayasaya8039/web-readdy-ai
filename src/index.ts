@@ -301,32 +301,50 @@ function getMainPageHTML(): string {
 <body class="bg-slate-100">
   <!-- トップナビゲーションバー -->
   <nav class="h-14 bg-white border-b border-slate-200 flex items-center px-4 gap-4">
-    <!-- プロジェクト名 -->
+    <!-- ロゴ -->
     <div class="flex items-center gap-2">
-      <button class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors">
-        <span class="font-medium text-slate-700">My First Project</span>
-        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-        </svg>
-      </button>
+      <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white font-bold rounded-lg rotate-45">
+        <span class="-rotate-45">R</span>
+      </div>
+      <span class="font-bold text-lg text-slate-800">Web Readdy AI</span>
     </div>
 
-    <!-- メニューボタン群 -->
-    <div class="flex items-center gap-1">
-      <button class="px-3 py-1.5 rounded-lg text-sm text-slate-600 hover:bg-slate-100 transition-colors flex items-center gap-1">
-        Integrations
-        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <!-- プロジェクト名 -->
+    <div class="relative flex items-center gap-2 ml-4">
+      <button id="project-dropdown-btn" onclick="toggleProjectDropdown()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors border border-slate-200">
+        <span id="project-name" class="font-medium text-slate-700">新規プロジェクト</span>
+        <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
         </svg>
       </button>
-      <button class="px-3 py-1.5 rounded-lg text-sm text-slate-600 hover:bg-slate-100 transition-colors">Form</button>
-      <button class="px-3 py-1.5 rounded-lg text-sm text-slate-600 hover:bg-slate-100 transition-colors">SEO</button>
-      <button class="px-3 py-1.5 rounded-lg text-sm text-purple-600 hover:bg-purple-50 transition-colors">Readdy Agent</button>
+      <!-- プロジェクトドロップダウン -->
+      <div id="project-dropdown" class="hidden absolute top-full left-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg p-2 min-w-[200px] z-50">
+        <button onclick="createNewProject()" class="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          新規プロジェクト作成
+        </button>
+      </div>
     </div>
 
     <!-- 右側 -->
     <div class="flex-1"></div>
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-2">
+      <!-- Shareボタン -->
+      <button onclick="shareProject()" class="flex items-center gap-1.5 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-100 rounded-lg transition-colors border border-slate-200">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+        </svg>
+        Share
+      </button>
+      <!-- Downloadボタン -->
+      <button onclick="downloadCode()" class="flex items-center gap-1.5 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-100 rounded-lg transition-colors border border-slate-200">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+        </svg>
+        Download
+      </button>
       <!-- Publishボタン -->
       <button class="px-4 py-1.5 bg-purple-500 hover:bg-purple-600 text-white text-sm font-medium rounded-lg transition-colors">
         Publish
@@ -369,10 +387,10 @@ function getMainPageHTML(): string {
         </div>
         <!-- アドレスバー風 -->
         <div class="flex-1 flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-lg text-sm text-slate-500">
-          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
           </svg>
-          <span>Readdy Site /</span>
+          <span id="preview-url">https://your-site.readdy.ai/</span>
         </div>
         <!-- ビューポート切り替え -->
         <div class="flex items-center gap-1">
@@ -900,6 +918,90 @@ window.toggleCodeView = toggleCodeView
 window.switchTab = switchTab
 window.sendFeedback = sendFeedback
 window.toggleFileOperations = toggleFileOperations
+
+// プロジェクトドロップダウン
+window.toggleProjectDropdown = function() {
+  const dropdown = document.getElementById('project-dropdown')
+  if (dropdown) {
+    dropdown.classList.toggle('hidden')
+  }
+}
+
+// 新規プロジェクト作成
+window.createNewProject = function() {
+  if (confirm('現在のプロジェクトを破棄して新規作成しますか？')) {
+    state.generatedCode = null
+    const placeholder = document.getElementById('preview-placeholder')
+    const iframe = document.getElementById('preview-iframe')
+    if (placeholder) placeholder.classList.remove('hidden')
+    if (iframe) iframe.classList.add('hidden')
+    const dropdown = document.getElementById('project-dropdown')
+    if (dropdown) dropdown.classList.add('hidden')
+  }
+}
+
+// 共有機能
+window.shareProject = function() {
+  if (!state.generatedCode) {
+    alert('共有するWebサイトがありません。')
+    return
+  }
+  const blob = new Blob([state.generatedCode], { type: 'text/html' })
+  const url = URL.createObjectURL(blob)
+  window.open(url, '_blank')
+}
+
+// ダウンロード機能
+window.downloadCode = function() {
+  if (!state.generatedCode) {
+    alert('ダウンロードするコードがありません。')
+    return
+  }
+  const blob = new Blob([state.generatedCode], { type: 'text/html' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'index.html'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}
+
+// ページセレクター
+window.togglePageSelector = function() {
+  const dropdown = document.getElementById('page-dropdown')
+  if (dropdown) dropdown.classList.toggle('hidden')
+}
+
+window.selectPage = function(pageName) {
+  const el = document.getElementById('current-page-name')
+  if (el) el.textContent = pageName
+  const dropdown = document.getElementById('page-dropdown')
+  if (dropdown) dropdown.classList.add('hidden')
+}
+
+// フルスクリーン
+window.toggleFullscreen = function() {
+  const container = document.getElementById('preview-container')
+  if (!container) return
+  if (document.fullscreenElement) {
+    document.exitFullscreen()
+  } else {
+    container.requestFullscreen()
+  }
+}
+
+// プレビューリフレッシュ
+window.refreshPreview = function() {
+  const iframe = document.getElementById('preview-iframe')
+  if (iframe && state.generatedCode) {
+    iframe.srcdoc = ''
+    setTimeout(() => { iframe.srcdoc = state.generatedCode }, 100)
+  }
+}
+
+
 `
 }
 
