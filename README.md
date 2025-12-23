@@ -2,7 +2,7 @@
 
 AI-powered website generator - Create websites by describing what you want in natural language.
 
-![Version](https://img.shields.io/badge/version-0.1.0-blue)
+![Version](https://img.shields.io/badge/version-1.1.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ## Overview
